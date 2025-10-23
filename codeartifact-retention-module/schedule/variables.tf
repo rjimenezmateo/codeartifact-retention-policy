@@ -9,3 +9,8 @@ variable "days_to_retain" {
 variable "lambda_arn" {
   type = string
 }
+
+variable "rule_name_prefix" {
+  type = string
+  description = "Prefix used to name and identify EventBridge rules created by this module."
+}

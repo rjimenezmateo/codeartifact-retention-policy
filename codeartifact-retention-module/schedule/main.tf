@@ -8,13 +8,15 @@ data "aws_arn" "lambda_arn" {
 
 locals {
   lambda_function_name = replace(data.aws_arn.lambda_arn.resource, "function:", "")
-}
-
-resource "aws_cloudwatch_event_rule" "codeartifact_retention_schedule" {
-  name = format("codeartifact-retention-%s-%s",
+  aws_cloudwatch_event_rule_name = format("%s-%s-%s",
+    var.rule_name_prefix,
     data.aws_arn.repository_arn.region,
     replace(replace(data.aws_arn.repository_arn.resource, "repository/", ""), "/", "-")
   )
+}
+
+resource "aws_cloudwatch_event_rule" "codeartifact_retention_schedule" {
+  name = substr(local.aws_cloudwatch_event_rule_name, 0, 64)
   schedule_expression = "cron(0 0 * * ? *)"
 }
 
